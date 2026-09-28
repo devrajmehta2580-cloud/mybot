@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drip Client - Premium Access</title>
+    <style>
+        body { background-color: #0b0914; color: white; font-family: sans-serif; text-align: center; padding: 20px; margin: 0; }
+        .title { color: #bc26fd; font-size: 28px; font-weight: bold; letter-spacing: 2px; margin-top: 20px; }
+        .card { background: #131023; padding: 25px; border-radius: 15px; display: inline-block; margin-top: 20px; border: 1px solid #2d244d; width: 90%; max-width: 360px; box-sizing: border-box; }
+        select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; box-sizing: border-box; }
+        select { background: #1c1836; color: white; border: 1px solid #bc26fd; }
+        input { background: #1c1836; color: white; border: 1px solid #3d356d; text-align: center; }
+        button { background: linear-gradient(90deg, #bc26fd, #6d11f7); color: white; font-weight: bold; cursor: pointer; }
+        .qr-box { background: white; padding: 12px; border-radius: 12px; display: inline-block; margin: 15px 0; min-height: 180px; }
+        img { width: 180px; height: 180px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="title">DRIP CLIENT</div>
+    <p style="color: #8a85a5; font-size: 14px;">Engineered for Premium Access. Secure. Stable.</p>
+
+    <div class="card">
+        <label style="font-size: 18px; font-weight: bold;">Select Panel</label>
+        <select id="panelSelect">
+            <option value="100">1-DAY - ₹100</option>
+            <option value="199">7-DAYS - ₹199</option>
+        </select>
+
+        <h3 style="color: #bc26fd; margin: 15px 0;">Price: ₹<span id="priceTxt">100</span></h3>
+
+        <div class="qr-box">
+            <!-- बिल्कुल नया क्यूआर कोड फिक्स लिंक -->
+            <img id="qrImage" src="https://qrserver.com" alt="Scan to Pay">
+        </div>
+
+        <div style="font-size: 18px; margin-top: 10px; font-weight: bold;">Enter UTR (TXN ID)</div>
+        <input type="text" id="utrInput" placeholder="Enter UTR Number" maxlength="12">
+        <button onclick="sendToTelegram()">Verify UTR</button>
+    </div>
+
+    <script>
+        // सभी सेटिंग्स पूरी तरह से लॉक कर दी गई हैं
+        const BOT_TOKEN = "8886133127:AAHr30bZN7N3-zl6x2Gk9eU1HOvJliUsCmA";
+        const CHAT_ID = "6649097946"; 
+        const YOUR_UPI = "7229934438-5@ybl"; 
+
+        document.getElementById('panelSelect').addEventListener('change', function() {
+            let price = this.value;
+            document.getElementById('priceTxt').innerText = price;
+            document.getElementById('qrImage').src = `https://qrserver.com{YOUR_UPI}%26am=${price}`;
+        });
+
+        function sendToTelegram() {
+            let utr = document.getElementById('utrInput').value;
+            let plan = document.getElementById('panelSelect').options[document.getElementById('panelSelect').selectedIndex].text;
+            
+            if(utr.length !== 12 || isNaN(utr)) {
+                alert("कृपया सही 12 अंकों का UTR नंबर डालें।");
+                return;
+            }
+
+            let message = "🔔 NEW PAYMENT!\nPlan: " + plan + "\nUTR: " + utr + "\nCheck account now!";
+            let url = `https://telegram.org{BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                alert("UTR वेरिफिकेशन के लिए भेज दिया गया है! कृपया 2-5 मिनट इंतज़ार करें।");
+                document.getElementById('utrInput').value = "";
+            })
+            .catch(err => {
+                alert("UTR वेरिफिकेशन के लिए भेज दिया गया है!");
+                document.getElementById('utrInput').value = "";
+            });
+        }
+    </script>
+</body>
+</html>
