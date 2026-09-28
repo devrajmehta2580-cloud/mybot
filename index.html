@@ -13,7 +13,7 @@
         input { background: #1c1836; color: white; border: 1px solid #3d356d; text-align: center; }
         button { background: linear-gradient(90deg, #bc26fd, #6d11f7); color: white; font-weight: bold; cursor: pointer; }
         .qr-box { background: white; padding: 12px; border-radius: 12px; display: inline-block; margin: 15px 0; min-height: 180px; }
-        img { width: 180px; height: 180px; display: block; }
+        img { width: 180px; height: 180px; display: block; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -31,7 +31,8 @@
         <h3 style="color: #bc26fd; margin: 15px 0;">Price: ₹<span id="priceTxt">100</span></h3>
 
         <div class="qr-box">
-            <img id="qrImage" src="https://qrserver.com" alt="Scan to Pay">
+            <!-- आपका असली PhonePe QR कोड यहाँ सेट कर दिया गया है -->
+            <img id="qrImage" src="https://ibb.co" alt="Scan to Pay">
         </div>
 
         <div style="font-size: 18px; margin-top: 10px; font-weight: bold;">Enter UTR (TXN ID)</div>
@@ -42,12 +43,10 @@
     <script>
         const BOT_TOKEN = "8886133127:AAHr30bZN7N3-zl6x2Gk9eU1HOvJliUsCmA";
         const CHAT_ID = "6649097946"; 
-        const YOUR_UPI = "7229934438-5@ybl"; 
 
         document.getElementById('panelSelect').addEventListener('change', function() {
             let price = this.value;
             document.getElementById('priceTxt').innerText = price;
-            document.getElementById('qrImage').src = `https://qrserver.com{YOUR_UPI}%26am=${price}`;
         });
 
         function sendToTelegram() {
